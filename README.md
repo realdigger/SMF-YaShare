@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/realdigger/SMF-Ya.Share.svg?branch=master)](https://travis-ci.org/realdigger/SMF-Ya.Share)
 # SMF Ya.Share mod
 * **Author:** digger http://mysmf.ru
 * **License:** The MIT License (MIT)
