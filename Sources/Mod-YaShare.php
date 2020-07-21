@@ -2,8 +2,8 @@
 /**
  * @package SMF Ya.Share Mod
  * @file Mod-YaShare.php
- * @author digger <digger@mysmf.ru> <http://mysmf.ru>
- * @copyright Copyright (c) 2012-2016, digger
+ * @author digger <digger@mysmf.net> <https://mysmf.net>
+ * @copyright Copyright (c) 2012-2020, digger
  * @license The MIT License (MIT) https://opensource.org/licenses/MIT
  * @version 1.0
  */
@@ -17,7 +17,7 @@ require_once($sourcedir . '/Class-YaShare.php');
 function loadYaShareHooks()
 {
     add_integration_function('integrate_load_theme', 'YaShare::loadAssets', false);
-    //add_integration_function('integrate_menu_buttons', 'setYaShareMetaOg', false);
+    add_integration_function('integrate_menu_buttons', 'setYaShareMetaOg', false);
     add_integration_function('integrate_admin_areas', 'addYaShareAdminArea', false);
     add_integration_function('integrate_modify_modifications', 'addYaShareAdminAction', false);
     add_integration_function('integrate_menu_buttons', 'addYaShareCopyright', false);
@@ -29,7 +29,7 @@ function loadYaShareHooks()
 }
 
 
-function addYaShareTopicBlock($position = 'top', $data = array())
+function addYaShareTopicBlock($position = 'top', $data = [])
 {
     global $context, $scripturl, $modSettings;
 
@@ -48,16 +48,13 @@ function addYaShareTopicBlock($position = 'top', $data = array())
             }
         }
     }
-//var_dump($position);
-//$data['href']
-//$data['body']
-//$data['attachment']
 
     if ($position == 'top' || $position == 'bottom') {
         $yashare = new YaShare($scripturl . '?topic=' . $context['current_topic'] . '.0', $context['subject']);
     } elseif ($position == 'message') {
         $yashare = new YaShare($data['href'], $data['subject'], $data['body']);
     }
+
     echo $yashare->constructBlock();
     unset ($yashare);
 }
@@ -72,7 +69,7 @@ function addYaShareAdminArea(&$admin_areas)
     global $txt;
     loadLanguage('YaShare/');
 
-    $admin_areas['config']['areas']['modsettings']['subsections']['yashare'] = array($txt['yashare']);
+    $admin_areas['config']['areas']['modsettings']['subsections']['yashare'] = [$txt['yashare']];
 }
 
 
@@ -96,58 +93,58 @@ function addYaShareAdminSettings($return_config = false)
     global $txt, $scripturl, $context;
     loadLanguage('YaShare/');
 
-    $context['page_title'] = $context['settings_title'] = $txt['yashare'];
+    $context['page_title']       = $context['settings_title'] = $txt['yashare'];
     $context['settings_message'] = $txt['yashare_settings_message'];
-    $context['post_url'] = $scripturl . '?action=admin;area=modsettings;save;sa=yashare';
+    $context['post_url']         = $scripturl . '?action=admin;area=modsettings;save;sa=yashare';
 
-    $config_vars = array(
-        array('check', 'yashare_enabled'),
-        array('check', 'yashare_topic_top'),
-        array('check', 'yashare_topic_bottom'),
-        array('check', 'yashare_topic_message', 'subtext' => $txt['yashare_topic_message_sub']),
+    $config_vars = [
+        ['check', 'yashare_enabled'],
+        ['check', 'yashare_topic_top'],
+        ['check', 'yashare_topic_bottom'],
+        ['check', 'yashare_topic_message', 'subtext' => $txt['yashare_topic_message_sub']],
         '',
-        array('int', 'yashare_icons_count', 'subtext' => $txt['yashare_icons_count_sub']),
-        array('check', 'yashare_icons_small'),
-        array('check', 'yashare_counter', 'subtext' => $txt['yashare_counter_sub']),
-        array(
+        ['int', 'yashare_icons_count', 'subtext' => $txt['yashare_icons_count_sub']],
+        ['check', 'yashare_icons_small'],
+        ['check', 'yashare_counter', 'subtext' => $txt['yashare_counter_sub']],
+        [
             'select',
             'yashare_icons_list',
-            array(
-                'blogger' => $txt['yashare_blogger'],
-                'collections' => $txt['yashare_collections'],
-                'delicious' => $txt['yashare_delicious'],
-                'digg' => $txt['yashare_digg'],
-                'evernote' => $txt['yashare_evernote'],
-                'facebook' => $txt['yashare_facebook'],
-                'gplus' => $txt['yashare_gplus'],
-                'linkedin' => $txt['yashare_linkedin'],
-                'lj' => $txt['yashare_lj'],
-                'moimir' => $txt['yashare_moimir'],
+            [
+                'blogger'       => $txt['yashare_blogger'],
+                'collections'   => $txt['yashare_collections'],
+                'delicious'     => $txt['yashare_delicious'],
+                'digg'          => $txt['yashare_digg'],
+                'evernote'      => $txt['yashare_evernote'],
+                'facebook'      => $txt['yashare_facebook'],
+                'gplus'         => $txt['yashare_gplus'],
+                'linkedin'      => $txt['yashare_linkedin'],
+                'lj'            => $txt['yashare_lj'],
+                'moimir'        => $txt['yashare_moimir'],
                 'odnoklassniki' => $txt['yashare_odnoklassniki'],
-                'pinterest' => $txt['yashare_pinterest'],
-                'pocket' => $txt['yashare_pocket'],
-                'qzone' => $txt['yashare_qzone'],
-                'reddit' => $txt['yashare_reddit'],
-                'renren' => $txt['yashare_renren'],
-                'sinaWeibo' => $txt['yashare_sinaWeibo'],
-                'skype' => $txt['yashare_skype'],
-                'surfingbird' => $txt['yashare_surfingbird'],
-                'telegram' => $txt['yashare_telegram'],
-                'tencentWeibo' => $txt['yashare_tencentWeibo'],
-                'tumblr' => $txt['yashare_tumblr'],
-                'twitter' => $txt['yashare_twitter'],
-                'viber' => $txt['yashare_viber'],
-                'vkontakte' => $txt['yashare_vkontakte'],
-                'whatsapp' => $txt['yashare_whatsapp'],
-            ),
+                'pinterest'     => $txt['yashare_pinterest'],
+                'pocket'        => $txt['yashare_pocket'],
+                'qzone'         => $txt['yashare_qzone'],
+                'reddit'        => $txt['yashare_reddit'],
+                'renren'        => $txt['yashare_renren'],
+                'sinaWeibo'     => $txt['yashare_sinaWeibo'],
+                'skype'         => $txt['yashare_skype'],
+                'surfingbird'   => $txt['yashare_surfingbird'],
+                'telegram'      => $txt['yashare_telegram'],
+                'tencentWeibo'  => $txt['yashare_tencentWeibo'],
+                'tumblr'        => $txt['yashare_tumblr'],
+                'twitter'       => $txt['yashare_twitter'],
+                'viber'         => $txt['yashare_viber'],
+                'vkontakte'     => $txt['yashare_vkontakte'],
+                'whatsapp'      => $txt['yashare_whatsapp'],
+            ],
             'multiple' => true,
-            'subtext' => $txt['yashare_icons_list_sub'],
-        ),
+            'subtext'  => $txt['yashare_icons_list_sub'],
+        ],
         '',
-        array('text', 'yashare_image', 'subtext' => $txt['yashare_image_sub']),
-        array('check', 'yashare_msg_image', 'subtext' => $txt['yashare_msg_image_sub']),
-        array('check', 'yashare_og_enabled', 'subtext' => $txt['yashare_og_enabled_sub']),
-    );
+        ['text', 'yashare_image', 'subtext' => $txt['yashare_image_sub']],
+        ['check', 'yashare_msg_image', 'subtext' => $txt['yashare_msg_image_sub']],
+        ['check', 'yashare_og_enabled', 'subtext' => $txt['yashare_og_enabled_sub']],
+    ];
 
     if ($return_config) {
         return $config_vars;
@@ -171,60 +168,57 @@ function addYaShareCopyright()
     global $context;
 
     if ($context['current_action'] == 'credits') {
-        $context['copyrights']['mods'][] = '<a href="http://mysmf.ru/mods/yashare" title="Ya.Share" target="_blank">Ya.Share</a> &copy; 2012-2016, digger | Powered by <a href="https://tech.yandex.ru/share" title="Powered by Ya.Share API" target="_blank">Ya.Share API</a>';
+        $context['copyrights']['mods'][] = '<a href="https://mysmf.net/mods/yashare" title="Ya.Share" target="_blank">Ya.Share</a> &copy; 2012-2020, digger | Powered by <a href="https://tech.yandex.ru/share" title="Powered by Ya.Share API" target="_blank">Ya.Share API</a>';
     }
 }
 
 
 /**
  * Set meta tags for OpenGraph markup
+ * @return bool
  */
 function setYaShareMetaOg()
 {
     global $mbname, $context, $attachments, $scripturl, $modSettings, $settings, $txt;
+
+    if (empty($modSettings['yashare_og_enabled']) || empty($context['current_topic'])) {
+        return false;
+    }
 
     // Set og:site_name
     $og_site_name = $context['forum_name'];
 
     // Set og:title
     $og_title = $context['subject'];
-
+    var_dump($context['subject']);
 
     // Set og:type
-    if (!empty($context['current_topic'])) {
-        $og_type = 'article';
-    } else {
-        $og_type = 'website';
-    }
+    $og_type = 'article';
 
     // Set og:description
     if (!empty($context['is_poll'])) {
         $og_description = $txt['poll'] . ': ' . $context['poll']['question'];
+    } elseif (!empty($context['first_message'])) {
+        $og_description = YaShare::getMsgDescriptionAndImage($context['first_message'])['description'];
+        $og_image       = YaShare::getMsgDescriptionAndImage($context['first_message'])['image'];
     } else {
-        if (!empty($context['first_message'])) {
-            $og_description = YaShare::getMsgDescriptionAndImage($context['first_message']);
-        } else {
-            $og_description = $og_title;
-        }
+        $og_description = $og_title;
     }
 
     // Set og:image
     // TODO: first_message -> topic_first_message ??? First on page or first of topic ? is_image
-    if (!empty($modSettings['microdata4smf_logo_attachment']) && !empty($context['first_message']) && !empty($attachments[$context['first_message']][0]['width']) && !empty($attachments[$context['first_message']][0]['approved']) && $attachments[$context['first_message']][0]['width'] >= 200 && $attachments[$context['first_message']][0]['height'] >= 200) {
-        $og_image = $scripturl . '?action=dlattach;topic=' . $context['current_topic'] . '.0;attach=' . $attachments[$context['first_message']][0]['id_attach'] . ';image';
-    } else {
-        if (!empty($modSettings['microdata4smf_logo_img']) && !empty($og_body['image'])) {
+    if (empty($og_image)) {
+        // Find any usable image
+        if (!empty($modSettings['microdata4smf_logo_attachment']) && !empty($context['first_message']) && !empty($attachments[$context['first_message']][0]['width']) && !empty($attachments[$context['first_message']][0]['approved']) && $attachments[$context['first_message']][0]['width'] >= 200 && $attachments[$context['first_message']][0]['height'] >= 200) {
+            $og_image = $scripturl . '?action=dlattach;topic=' . $context['current_topic'] . '.0;attach=' . $attachments[$context['first_message']][0]['id_attach'] . ';image';
+        } elseif (!empty($modSettings['microdata4smf_logo_img']) && !empty($og_body['image'])) {
             $og_image = $og_body['image'];
+        } elseif (!empty($modSettings['microdata4smf_logo'])) {
+            $og_image = trim($modSettings['microdata4smf_logo']);
+        } elseif (!empty($context['header_logo_url_html_safe'])) {
+            $og_image = $context['header_logo_url_html_safe'];
         } else {
-            if (!empty($modSettings['microdata4smf_logo'])) {
-                $og_image = trim($modSettings['microdata4smf_logo']);
-            } else {
-                if (!empty($context['header_logo_url_html_safe'])) {
-                    $og_image = $context['header_logo_url_html_safe'];
-                } else {
-                    $og_image = $settings['images_url'] . '/smflogo.png"';
-                }
-            }
+            $og_image = $settings['images_url'] . '/smflogo.png';
         }
     }
 
@@ -241,4 +235,6 @@ function setYaShareMetaOg()
   <meta property="og:image" content="' . $og_image . '" />
   <meta property="og:description" content="' . $og_description . '" />
   ';
+
+    return true;
 }

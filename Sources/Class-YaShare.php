@@ -3,8 +3,8 @@
 /**
  * @package SMF Ya.Share Mod
  * @file Class-YaShare.php
- * @author digger <digger@mysmf.ru> <http://mysmf.ru>
- * @copyright Copyright (c) 2012-2016, digger
+ * @author digger <digger@mysmf.net> <https://mysmf.net>
+ * @copyright Copyright (c) 2012-2020, digger
  * @license The MIT License (MIT) https://opensource.org/licenses/MIT
  * @version 1.0
  */
@@ -48,18 +48,20 @@ class YaShare
      * @param $id_msg
      * @return array description and image
      */
-    function getMsgDescriptionAndImage($id_msg = 0)
+    public static function getMsgDescriptionAndImage($id_msg = 0)
     {
         global $smcFunc, $modSettings;
 
-        $request = $smcFunc['db_query']('', '
+        $request = $smcFunc['db_query'](
+            '',
+            '
 			SELECT ' . (!empty($modSettings['yashare_msg_image']) ? 'body ' : 'SUBSTRING(body, 1, 250) ') . '
 			FROM {db_prefix}messages
 			WHERE id_msg = {int:id_msg}
 			LIMIT 1',
-            array(
+            [
                 'id_msg' => (int)$id_msg
-            )
+            ]
         );
 
         list ($description) = $smcFunc['db_fetch_row']($request);
@@ -68,23 +70,28 @@ class YaShare
         preg_match('/\[img.*](.+)\[\/img]/i', $description, $image);
         if (!empty($image[1])) {
             $image = trim($image[1]);
+        } else {
+            $image = '';
         }
 
-        $description = strip_tags(str_replace(array('<br>', '<br/>', '<br />', '<hr>', '<hr/>', '<hr />'), '. ',
-            parse_bbc($description, false)));
+        $description = strip_tags(
+            str_replace(
+                ['<br>', '<br/>', '<br />', '<hr>', '<hr/>', '<hr />'],
+                '. ',
+                parse_bbc($description, false)
+            )
+        );
 
         if ($smcFunc['strlen']($description) > 200) {
             $description = $smcFunc['substr']($description, 0, 197);
-            $position = $smcFunc['strpos']($description, ' ', $smcFunc['strlen']($description) - 15);
+            $position    = $smcFunc['strpos']($description, ' ', $smcFunc['strlen']($description) - 15);
             $description = $smcFunc['substr']($description, 0, $position);
         }
 
-        return array(
+        return [
             'description' => trim($description) . '...',
-            'image' => $image,
-        );
-
-
+            'image'       => $image,
+        ];
     }
 
     /**
@@ -111,7 +118,7 @@ class YaShare
      * Constrict div with share buttons
      * @return string|void
      */
-    function constructBlock()
+    public function constructBlock()
     {
         global $modSettings, $txt, $context;
 
@@ -126,12 +133,12 @@ class YaShare
         }
 
         // data-title
-        $params[] = 'data-title="' . $this->title . '"';
-        $params[] = 'data-title:twitter="' . $this->title . '"'; //cut 140
+        $params[] = 'data-title="' . htmlspecialchars($this->title) . '"';
+        $params[] = 'data-title:twitter="' . htmlspecialchars($this->title) . '"'; //cut 140
 
 
         // data-description
-        $params[] = 'data-description="' . $this->description . '"';
+        $params[] = 'data-description="' . htmlspecialchars($this->description) . '"';
 
 
         // data-image
@@ -164,7 +171,7 @@ class YaShare
 
 
         return '
-    <div class="ya-share2 nextlinks"' . implode(' ', $params) . '></div>
+        <div class="modifybutton ya-share2"' . implode(' ', $params) . '></div>
     ';
     }
 

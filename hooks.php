@@ -1,8 +1,8 @@
 <?php
 /**
  * @package SMF Ya.Share Mod
- * @author digger @ http://mysmf.ru
- * @copyright 2012-2016, digger
+ * @author digger @ https://mysmf.net
+ * @copyright 2012-2020, digger
  * @license The MIT License (MIT)
  *
  *
@@ -28,10 +28,10 @@ if (!empty($context['uninstalling'])) {
     $call = 'add_integration_function';
 }
 
-$hooks = array(
+$hooks = [
     'integrate_pre_include' => '$sourcedir/Mod-YaShare.php',
-    'integrate_pre_load' => 'loadYaShareHooks'
-);
+    'integrate_pre_load'    => 'loadYaShareHooks'
+];
 
 foreach ($hooks as $hook => $function) {
     $call($hook, $function);
