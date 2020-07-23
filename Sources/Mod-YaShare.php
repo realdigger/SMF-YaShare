@@ -190,7 +190,6 @@ function setYaShareMetaOg()
 
     // Set og:title
     $og_title = $context['subject'];
-    var_dump($context['subject']);
 
     // Set og:type
     $og_type = 'article';
